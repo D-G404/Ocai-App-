@@ -4,22 +4,24 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Shopping bag body -->
+    <!-- Bag body -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M30,45 L78,45 L72,82 L36,82 Z" />
+        android:pathData="M28,46 Q26,46 25,48 L18,82 Q17,85 20,85 L88,85 Q91,85 90,82 L83,48 Q82,46 80,46 Z" />
 
-    <!-- Bag handle left -->
+    <!-- Bag handle -->
     <path
         android:fillColor="#00000000"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="5"
+        android:strokeWidth="6"
         android:strokeLineCap="round"
-        android:pathData="M42,45 Q42,28 54,28 Q66,28 66,45" />
+        android:pathData="M40,46 Q40,24 54,24 Q68,24 68,46" />
 
-    <!-- Small heart or star detail on bag -->
+    <!-- Bag fold line -->
     <path
-        android:fillColor="#FF6B6B"
-        android:pathData="M54,58 L56.5,63 L62,63.8 L58,67.7 L59,73 L54,70.3 L49,73 L50,67.7 L46,63.8 L51.5,63 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#6C63FF"
+        android:strokeWidth="2.5"
+        android:pathData="M22,58 L86,58" />
 
 </vector>
