@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Ocai - Поиск товаров из Китая</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0F0F1A;
+      color: #fff;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      padding-top: 60px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      background: #6C63FF;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .logo-text h1 { font-size: 22px; font-weight: 700; }
+    .logo-text p { font-size: 12px; color: #8888AA; }
+
+    .title { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #8888AA; margin-bottom: 32px; }
+
+    .search-box {
+      background: #1A1A2E;
+      border: 1.5px solid #6C63FF;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .search-box textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 15px;
+      resize: none;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+
+    .search-box textarea::placeholder { color: #555577; }
+
+    .btn-search {
+      width: 100%;
+      height: 52px;
+      background: #6C63FF;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-search:hover { background: #5A52E0; }
+    .btn-search:disabled { background: #3D3860; cursor: not-allowed; }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .quick-links {
+      margin-top: 32px;
+    }
+
+    .quick-links p { font-size: 13px; color: #8888AA; margin-bottom: 12px; }
+
+    .quick-links .links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .quick-link {
+      flex: 1;
+      background: #1A1A2E;
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+
+    .quick-link:hover { background: #252540; }
+    .quick-link .icon { font-size: 20px; margin-bottom: 4px; }
+
+    .footer {
+      margin-top: auto;
+      padding: 24px 0 16px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      text-align: center;
+    }
+
+    .status-bar {
+      font-size: 13px;
+      color: #8888AA;
+      text-align: center;
+      min-height: 20px;
+      margin: 8px 0;
+    }
+
+    .error { color: #FF6B6B; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🛍️</div>
+      <div class="logo-text">
+        <h1>Ocai</h1>
+        <p>Товары из Китая</p>
+      </div>
+    </div>
+
+    <div class="title">Что вы ищете?</div>
+    <div class="subtitle">Опишите товар на русском языке — ИИ поможет найти</div>
+
+    <div class="search-box">
+      <textarea id="searchInput" rows="3"
+        placeholder="Например: хочу купить зимнюю куртку для ребёнка 5 лет..."></textarea>
+    </div>
+
+    <div class="status-bar" id="statusBar"></div>
+
+    <button class="btn-search" id="searchBtn" onclick="doSearch()">
+      <span id="btnSpinner" class="spinner"></span>
+      <span id="btnIcon">🔍</span>
+      <span id="btnText">Найти товар</span>
+    </button>
+
+    <div class="quick-links">
+      <p>Быстрый переход</p>
+      <div class="links">
+        <a class="quick-link" href="https://ocai.ru" target="_blank">
+          <div class="icon">🏠</div>Главная
+        </a>
+        <a class="quick-link" href="https://ocai.ru/brand" target="_blank">
+          <div class="icon">🏷️</div>Бренды
+        </a>
+        <a class="quick-link" href="https://ocai.ru/user/coupons" target="_blank">
+          <div class="icon">🎫</div>Акции
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">AI поиск на базе DeepSeek</div>
+
+  <script>
+    // ⚠️ 替换为你的 DeepSeek API Key
+    // 注意：H5 直接调用 API 会暴露 Key，生产环境建议用后端代理
+    const DEEPSEEK_API_KEY = 'YOUR_DEEPSEEK_API_KEY';
+
+    // 回车搜索
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        doSearch();
+      }
+    });
+
+    async function doSearch() {
+      const input = document.getElementById('searchInput').value.trim();
+      if (!input) return;
+
+      setLoading(true, 'Анализирую запрос...');
+
+      let keywords = input;
+
+      try {
+        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'deepseek-chat',
+            messages: [
+              {
+                role: 'system',
+                content: `Ты помощник по покупкам. Извлеки ключевые слова для поиска товара из сообщения пользователя.
+Верни ТОЛЬКО поисковые ключевые слова на русском языке, максимум 5 слов, без пояснений.
+Пример: ввод "хочу купить зимние кроссовки" → вывод "зимние кроссовки"`
+              },
+              { role: 'user', content: input }
+            ],
+            max_tokens: 50,
+            temperature: 0.3
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          keywords = data.choices[0].message.content.trim();
+        }
+      } catch (e) {
+        // API 失败，直接用原始输入
+        console.warn('DeepSeek API failed, using raw input:', e);
+      }
+
+      setLoading(true, 'Ищу товары: ' + keywords);
+
+      // 跳转到 ocai.ru 搜索结果
+      const searchUrl = 'https://ocai.ru/search?keyword=' + encodeURIComponent(keywords);
+      window.open(searchUrl, '_blank');
+
+      setLoading(false, '');
+    }
+
+    function setLoading(loading, text) {
+      const btn = document.getElementById('searchBtn');
+      const spinner = document.getElementById('btnSpinner');
+      const icon = document.getElementById('btnIcon');
+      const btnText = document.getElementById('btnText');
+      const statusBar = document.getElementById('statusBar');
+
+      btn.disabled = loading;
+      spinner.style.display = loading ? 'block' : 'none';
+      icon.style.display = loading ? 'none' : 'inline';
+      btnText.textContent = loading ? text : 'Найти товар';
+      statusBar.textContent = '';
+    }
+  </script>
+</body>
+</html>
