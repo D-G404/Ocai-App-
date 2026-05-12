@@ -46,7 +46,6 @@ DEEPSEEK_BASE_URL=https://api.chatanywhere.tech/v1
 ### Option B: DeepSeek Official (pay-as-you-go, cheapest)
 
 1. Get a key at https://platform.deepseek.com/api_keys
-2. deepseek-chat costs ~¥0.001 per request
 
 `.env` example:
 ```env
