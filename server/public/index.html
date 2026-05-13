@@ -159,7 +159,7 @@
       }
 
       // 跳转 ocai.ru 搜索
-      window.open('https://ocai.ru/search?keyword=' + encodeURIComponent(keywords), '_blank');
+      window.location.href = 'https://ocai.ru/search?keyword=' + encodeURIComponent(keywords);
       setLoading(false, '');
     }
 
